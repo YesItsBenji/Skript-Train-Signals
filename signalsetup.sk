@@ -1,0 +1,269 @@
+command /signalsetup [<text>]:
+	trigger:
+		if arg-1 is "s":
+			set {signals.%player%.loop} to 0
+			clear {signals::%player%::loc::*}
+			add round x-coordinate of player to {signals::%player%::loc::*}
+			add round y-coordinate of player to {signals::%player%::loc::*}
+			add round z-coordinate of player to {signals::%player%::loc::*}
+			add world of player to {signals::%player%::loc::*}
+			loop {signals::*}:
+				if loop-value is {signals.%player%.loop}:
+					add 1 to {signals.%player%.loop}
+		#	set line 2 of event-block to "%{signals.%player%.loop}%"
+			add {signals.%player%.loop} to {signals::*}
+			add {signals.%player%.loop} to {signals::AWS::*}
+			add {signals.%player%.loop} to {signals::stop::*}
+		#	set {signals::location::%line 2 of event-block%} to location of event-block
+		#	send "Added Signal %{signals.%player%.loop}%"
+		#	set line 3 of event-block to "&cRed"
+		#	set block 1 down location of event-block to Redstone Block
+			set {signals.%{signals.%player%.loop}%} to false
+		#	set {signals::*} to sorted {signals::*}
+
+			set block 2 east location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 2 east location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 2 east location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set {signals::location::%{signals.%player%.loop}%} to block 2 east location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			
+			set block 6 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unlit redstone lamp
+			set block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "AWS"
+			set {signals::AWS::location::%{signals.%player%.loop}%} to block 5 down -2 west 7 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.AWS.%{signals.%player%.loop}%} to false
+
+			set block 6 down -2 west 8 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unpowered south facing lever
+			set block 6 down -2 west 9 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} + 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 9% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""switcher\""}"",Text3:""{\""text\"":\""!=empty\""}"",Text4:""{\""text\"":\""empty\""}""} replace"
+
+			set block 6 down -2 west 11 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down -2 west 11 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Redstone Floor Torch
+			set block 6 down -2 west 12 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} + 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 12% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[train]\""}"",Text2:""{\""text\"":\""station\""}"",Text3:""{\""text\"":\""\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+			set block 6 down -2 west 13 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 6 down -2 west 14 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down -2 west 15 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down -2 west 15 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+
+			set block 5 down -2 west 13 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to northward redstone repeater
+			set block 5 down -2 west 14 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down -2 west 15 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down -2 west 15 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+
+			set block 6 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Floor sign
+			set line 1 of block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "stop"
+			set {signals::stop::location::%{signals.%player%.loop}%} to block 5 down -2 west 16 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.stop.%{signals.%player%.loop}%} to false
+
+			set block 6 down -2 west 17 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down -2 west 17 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Floor sign
+			execute player command "setblock %{signals::%player%::loc::1} + 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 17% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""skip\""}"",Text3:""{\""text\"":\""!=t@ato\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+		else if arg-1 is "n":
+			send "%x-coordinate of player%"
+			set {signals.%player%.loop} to 0
+			clear {signals::%player%::loc::*}
+			add round x-coordinate of player to {signals::%player%::loc::*}
+			add round y-coordinate of player to {signals::%player%::loc::*}
+			add round z-coordinate of player to {signals::%player%::loc::*}
+			add world of player to {signals::%player%::loc::*}
+			loop {signals::*}:
+				if loop-value is {signals.%player%.loop}:
+					add 1 to {signals.%player%.loop}
+		#	set line 2 of event-block to "%{signals.%player%.loop}%"
+			add {signals.%player%.loop} to {signals::*}
+			add {signals.%player%.loop} to {signals::AWS::*}
+			add {signals.%player%.loop} to {signals::stop::*}
+		#	set {signals::location::%line 2 of event-block%} to location of event-block
+		#	send "Added Signal %{signals.%player%.loop}%"
+		#	set line 3 of event-block to "&cRed"
+		#	set block 1 down location of event-block to Redstone Block
+			set {signals.%{signals.%player%.loop}%} to false
+		#	set {signals::*} to sorted {signals::*}
+
+			set block 2 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 2 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 2 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set {signals::location::%{signals.%player%.loop}%} to block 2 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			
+			set block 6 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unlit redstone lamp
+			set block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "AWS"
+			set {signals::AWS::location::%{signals.%player%.loop}%} to block 5 down 2 west 7 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.AWS.%{signals.%player%.loop}%} to false
+
+			set block 6 down 2 west 8 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unpowered north facing lever
+			set block 6 down 2 west 9 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} - 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 9% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""switcher\""}"",Text3:""{\""text\"":\""!=empty\""}"",Text4:""{\""text\"":\""empty\""}""} replace"
+
+			set block 6 down 2 west 11 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down 2 west 11 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Redstone Floor Torch
+			set block 6 down 2 west 12 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} - 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 12% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[train]\""}"",Text2:""{\""text\"":\""station\""}"",Text3:""{\""text\"":\""\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+			set block 6 down 2 west 13 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 6 down 2 west 14 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down 2 west 15 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down 2 west 15 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+
+			set block 5 down 2 west 13 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to southward redstone repeater
+			set block 5 down 2 west 14 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down 2 west 15 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down 2 west 15 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+
+			set block 6 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Floor sign
+			set line 1 of block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "stop"
+			set {signals::stop::location::%{signals.%player%.loop}%} to block 5 down 2 west 16 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.stop.%{signals.%player%.loop}%} to false
+
+			execute player command "setblock %{signals::%player%::loc::1} - 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 17% minecraft:dirt replace"
+			execute player command "setblock %{signals::%player%::loc::1} - 2% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 17% minecraft:sign[rotation=4]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""skip\""}"",Text3:""{\""text\"":\""!=t@ato\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+		else if arg-1 is "e":
+			send "%x-coordinate of player%"
+			set {signals.%player%.loop} to 0
+			clear {signals::%player%::loc::*}
+			add round x-coordinate of player to {signals::%player%::loc::*}
+			add round y-coordinate of player to {signals::%player%::loc::*}
+			add round z-coordinate of player to {signals::%player%::loc::*}
+			add world of player to {signals::%player%::loc::*}
+			loop {signals::*}:
+				if loop-value is {signals.%player%.loop}:
+					add 1 to {signals.%player%.loop}
+		#	set line 2 of event-block to "%{signals.%player%.loop}%"
+			add {signals.%player%.loop} to {signals::*}
+			add {signals.%player%.loop} to {signals::AWS::*}
+			add {signals.%player%.loop} to {signals::stop::*}
+		#	set {signals::location::%line 2 of event-block%} to location of event-block
+		#	send "Added Signal %{signals.%player%.loop}%"
+		#	set line 3 of event-block to "&cRed"
+		#	set block 1 down location of event-block to Redstone Block
+			set {signals.%{signals.%player%.loop}%} to false
+		#	set {signals::*} to sorted {signals::*}
+
+			set block 2 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 2 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 2 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set {signals::location::%{signals.%player%.loop}%} to block 2 south location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			
+			set block 6 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unlit redstone lamp
+			set block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "AWS"
+			set {signals::AWS::location::%{signals.%player%.loop}%} to block 5 down -2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.AWS.%{signals.%player%.loop}%} to false
+
+			set block 6 down -2 south 8 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unpowered east facing lever
+			set block 6 down -2 south 9 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} - 9% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""switcher\""}"",Text3:""{\""text\"":\""!=empty\""}"",Text4:""{\""text\"":\""empty\""}""} replace"
+
+			set block 6 down -2 south 11 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down -2 south 11 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Redstone Floor Torch
+			set block 6 down -2 south 12 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} - 12% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[train]\""}"",Text2:""{\""text\"":\""station\""}"",Text3:""{\""text\"":\""\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+			set block 6 down -2 south 13 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 6 down -2 south 14 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down -2 south 15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down -2 south 15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+
+			set block 5 down -2 south 13 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to westward redstone repeater
+			set block 5 down -2 south 14 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down -2 south 15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down -2 south 15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+
+			set block 6 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Floor sign
+			set line 1 of block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "stop"
+			set {signals::stop::location::%{signals.%player%.loop}%} to block 5 down -2 south 16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.stop.%{signals.%player%.loop}%} to false
+
+			execute player command "setblock %{signals::%player%::loc::1} - 17% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 2% minecraft:dirt replace"
+			execute player command "setblock %{signals::%player%::loc::1} - 17% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} - 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""skip\""}"",Text3:""{\""text\"":\""!=t@ato\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+		else if arg-1 is "w":
+			send "%x-coordinate of player%"
+			set {signals.%player%.loop} to 0
+			clear {signals::%player%::loc::*}
+			add round x-coordinate of player to {signals::%player%::loc::*}
+			add round y-coordinate of player to {signals::%player%::loc::*}
+			add round z-coordinate of player to {signals::%player%::loc::*}
+			add world of player to {signals::%player%::loc::*}
+			loop {signals::*}:
+				if loop-value is {signals.%player%.loop}:
+					add 1 to {signals.%player%.loop}
+		#	set line 2 of event-block to "%{signals.%player%.loop}%"
+			add {signals.%player%.loop} to {signals::*}
+			add {signals.%player%.loop} to {signals::AWS::*}
+			add {signals.%player%.loop} to {signals::stop::*}
+		#	set {signals::location::%line 2 of event-block%} to location of event-block
+		#	send "Added Signal %{signals.%player%.loop}%"
+		#	set line 3 of event-block to "&cRed"
+		#	set block 1 down location of event-block to Redstone Block
+			set {signals.%{signals.%player%.loop}%} to false
+		#	set {signals::*} to sorted {signals::*}
+
+			set block 2 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 2 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 2 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set {signals::location::%{signals.%player%.loop}%} to block 2 north location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			
+			set block 6 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unlit redstone lamp
+			set block 5 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to floor sign
+			set line 1 of block 5 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down 2 south -7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "AWS"
+			set {signals::AWS::location::%{signals.%player%.loop}%} to block 5 down 2 south 7 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.AWS.%{signals.%player%.loop}%} to false
+
+			set block 6 down 2 south -8 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to unpowered east facing lever
+			set block 6 down 2 south -9 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} + 9% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""switcher\""}"",Text3:""{\""text\"":\""!=empty\""}"",Text4:""{\""text\"":\""empty\""}""} replace"
+
+			set block 6 down 2 south -11 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down 2 south -11 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Redstone Floor Torch
+			set block 6 down 2 south -12 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} + 12% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[train]\""}"",Text2:""{\""text\"":\""station\""}"",Text3:""{\""text\"":\""\""}"",Text4:""{\""text\"":\""\""}""} replace"
+
+			set block 6 down 2 south -13 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 6 down 2 south -14 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down 2 south -15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 8 down 2 south -15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+
+			set block 5 down 2 south -13 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to westward redstone repeater
+			set block 5 down 2 south -14 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down 2 south -15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+			set block 6 down 2 south -15 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to redstone wire
+
+			set block 6 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			set block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to Floor sign
+			set line 1 of block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "[Signal]"
+			set line 2 of block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "%{signals.%player%.loop}%"
+			set line 3 of block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "&cRed"
+			set line 4 of block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to "stop"
+			set {signals::stop::location::%{signals.%player%.loop}%} to block 5 down 2 south -16 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4}
+			set {signals.stop.%{signals.%player%.loop}%} to false
+
+			set block 6 down 2 south -17 west location at {signals::%player%::loc::1}, {signals::%player%::loc::2}, {signals::%player%::loc::3} in {signals::%player%::loc::4} to dirt
+			execute player command "setblock %{signals::%player%::loc::1} + 17% %{signals::%player%::loc::2} - 5% %{signals::%player%::loc::3} + 2% minecraft:sign[rotation=0]{Text1:""{\""text\"":\""[+train]\""}"",Text2:""{\""text\"":\""skip\""}"",Text3:""{\""text\"":\""!=t@ato\""}"",Text4:""{\""text\"":\""\""}""} replace"	

@@ -1,0 +1,341 @@
+on sign change:
+	if line 1 of event-block is "[Signal]":
+		if line 4 of event-block is "AWS":
+			loop {signals::AWS::*}:
+				if loop-value is line 2 of event-block:
+					stop
+			add line 2 of event-block to {signals::AWS::*}
+			set {signals::AWS::location::%line 2 of event-block%} to location of event-block
+			send "AWS Added Signal %line 2 of event-block%"
+			set line 3 of event-block to "&cRed"
+			set block 1 down location of event-block to unlit Redstone lamp
+			set {signals.AWS.%line 2 of event-block%} to false
+
+		else if line 4 of event-block is "stop":
+			loop {signals::stop::*}:
+				if loop-value is line 2 of event-block:
+					stop
+			add line 2 of event-block to {signals::stop::*}
+			set {signals::stop::location::%line 2 of event-block%} to location of event-block
+			send "stop Added Signal %line 2 of event-block%"
+			set line 3 of event-block to "&cRed"
+			set block 1 down location of event-block to redstone block
+			set {signals.stop.%line 2 of event-block%} to false
+
+
+		else:
+			if line 2 is not set:
+				stop
+			loop {signals::*}:
+				if loop-value is line 2 of event-block:
+					stop
+			add line 2 of event-block to {signals::*}
+			set {signals::location::%line 2 of event-block%} to location of event-block
+			send "Added Signal %line 2 of event-block%"
+			set line 3 of event-block to "&cRed"
+			set block 1 down location of event-block to Redstone Block
+			set {signals.%line 2 of event-block%} to false
+
+on block break:
+	if line 1 of event-block is "[Signal]":
+		if line 4 of event-block is "AWS":
+			if event-location is {signals::AWS::location::%line 2 of event-block%}:
+				clear {signals::AWS::%line 2 of event-block%}
+				clear {signals::AWS::location::%line 2 of event-block%}
+				send "AWS removed signal %line 2 of event-block%"
+				
+				
+		if line 4 of event-block is "stop":
+			if event-location is {signals::stop::location::%line 2 of event-block%}:
+				clear {signals::stop::%line 2 of event-block%}
+				clear {signals::stop::location::%line 2 of event-block%}
+				send "stop removed signal %line 2 of event-block%"
+				
+			
+
+		else:
+			if event-location is {signals::location::%line 2 of event-block%}:
+				set {signals.%player%.loop} to 1
+				if {signals.%player%.temp} is {signals.%player%.temp2}:
+					clear {signals::%line 2 of event-block%}
+					clear {signals::location::%line 2 of event-block%}
+					send "removed signal %line 2 of event-block%"
+				
+
+command /signals [<text>] [<number>]:
+	trigger:
+		if arg-1 is "clear":
+			clear {signals::location::*}
+			clear {signals::*}
+		else if arg-1 is "loop":
+			set {signals.loop} to false
+		else if arg-1 is "list":
+			send "%{signals::*}%"
+		else if arg-1 is "book":
+			give book named "Book of signals" with lore "Book to control all signals" to player
+		else if arg-1 is "reload":
+			execute player command "sk reload signals"
+		else if arg-1 is "menu":
+			open chest inventory with 6 rows named "List of signals" to player
+			if arg-2 is not set:
+				set {signals.%player%.page} to 1
+			else:
+				set {signals.%player%.page} to arg-2
+			set {signals.%player%.temp} to ({signals.%player%.page} - 1) * 45
+			set {signals.%player%.loop} to 0
+			send "%{signals.%player%.temp}%"
+			loop {signals::*}:
+				send "%{signals.%player%.loop} - {signals.%player%.temp}%"
+				set {signals.%player%.temp2} to ({signals.%player%.loop} - {signals.%player%.temp})
+				if {signals.%player%.temp2} is more than -1:
+				#if player is online:
+					if {signals.%loop-value%} is true:
+						set slot {signals.%player%.temp2} of player's current inventory to Green Concrete named "%loop-value%" with lore "&aProceed"
+					if {signals.%loop-value%} is false:
+						set slot {signals.%player%.temp2} of player's current inventory to Red Concrete named "%loop-value%" with lore "&cDanger"
+				add 1 to {signals.%player%.loop}
+			set {test.%player%.loop} to 45
+			loop 9 times:
+				set slot {test.%player%.loop} of player's current inventory to Black Glass Pane named "&8&l[&2&lIBHTech&8&l]"
+				add 1 to {test.%player%.loop}
+			if {signals.%player%.page} is not 1:
+				set slot 46 of player's current inventory to Lime glass pane named "Go to Previous Page"
+			set slot 52 of player's current inventory to Lime glass pane named "Go to Next Page"
+			set slot 49 of player's current inventory to Red glass pane named "Page: %{test.%player%.pagenumber}%"
+			set slot 53 of player's current inventory to Compass named "Search for item/block."
+
+on block place:
+	if line 1 of event-block is "[Signal]":
+		send "sup"
+		if line 4 of event-block is "":
+			send "sup"
+			set {signals.%player%.loop} to 0
+			loop {signals::*}:
+				if loop-value is {signals.%player%.loop}:
+					add 1 to {signals.%player%.loop}
+			set line 2 of event-block to "%{signals.%player%.loop}%"
+			add {signals.%player%.loop} to {signals::*}
+			set {signals::location::%line 2 of event-block%} to location of event-block
+			send "Added Signal %{signals.%player%.loop}%"
+			set line 3 of event-block to "&cRed"
+			set block 1 down location of event-block to Redstone Block
+			set {signals.%{signals.%player%.loop}%} to false
+			set {signals::*} to sorted {signals::*}
+
+on inventory click:
+	if name of event-inventory is "List of signals":
+		cancel event
+		set {signals.%player%.temp} to index of event-slot
+		if {signals.%player%.temp} is 52:
+			execute player command "signals menu %{signals.%player%.page} + 1%"
+		else if {signals.%player%.temp} is 46:
+			execute player command "signals menu %{signals.%player%.page} - 1%"
+		else if {signals.%player%.temp} is less than 45:
+			
+			open chest inventory with 1 row named "Signal: %name of event-item%" to player
+			set {signals.%player%.editing} to name of event-item
+			if {signals.%name of event-item%} is true:
+				set slot 1 of player's current inventory to Green Concrete named "Signal Status:" with lore "&aGreen"
+			if {signals.%name of event-item%} is false:
+				set slot 1 of player's current inventory to Red Concrete named "Signal Status:" with lore "&cRed"
+			set slot 3 of player's current inventory to observer named "Signal is affected by: %{signals::affected::%{signals.%player%.editing}%::*}%"
+
+on inventory click:
+	if name of event-inventory contains "Signal:":
+		cancel event
+		set {signals.%player%.menu} to name of event-inventory
+		replace all "Signal: " with "" in {signals.%player%.menu}
+		if index of event-slot is 1:
+			if {signals.%{signals.%player%.menu}%} is false:
+				set {signals.%{signals.%player%.menu}%} to true
+				set event-slot to Green Concrete named "Signal Status:" with lore "&aGreen"
+			else if {signals.%{signals.%player%.menu}%} is true:
+				set {signals.%{signals.%player%.menu}%} to false
+				set event-slot to Red Concrete named "Signal Status:" with lore "&cRed"
+		if index of event-slot is 3:
+			open chest inventory with 6 row named "Effected by:" to player
+			execute player command "editsignals %{signals.%player%.menu}%"
+on load:
+	set {signals.loop} to true
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::*}:
+			if {signals.%loop-value%} is true:
+				set line 3 of block at {signals::location::%loop-value%} to "&aGreen"
+				set block 1 down location of block at {signals::location::%loop-value%} to Green Concrete
+			else if {signals.%loop-value%} is false:
+				set line 3 of block at {signals::location::%loop-value%} to "&cRed"
+				set block 1 down location of block at {signals::location::%loop-value%} to Redstone Block
+		wait 1 tick
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::stop::*}:
+			if {signals.stop.%loop-value%} is true:
+				set line 3 of block at {signals::stop::location::%loop-value%} to "&aGreen"
+				set block 1 down location of block at {signals::stop::location::%loop-value%} to Green Concrete
+			else if {signals.stop.%loop-value%} is false:
+				set line 3 of block at {signals::stop::location::%loop-value%} to "&cRed"
+				set block 1 down location of block at {signals::stop::location::%loop-value%} to Redstone Block
+		wait 1 tick
+
+on right click:
+	if lore of event-item is "Book to control all signals":
+		execute player command "signals menu"
+
+command /editsignals [<text>] [<text>]:
+	trigger:
+		if arg-2 is not set:
+			set {signals.%player%.page} to 1
+		else:
+			set {signals.%player%.page} to arg-2
+		set {signals.%player%.temp} to ({signals.%player%.page} - 1) * 45
+		set {signals.%player%.loop} to 0
+		loop {signals::*}:
+			set {signals.%player%.temp2} to ({signals.%player%.loop} - {signals.%player%.temp})
+			if {signals.%player%.temp2} is more than -1:
+			#if player is online:
+				if {signals::affected::%{signals.%player%.menu}%::*} contains "%loop-value%":
+					set slot {signals.%player%.temp2} of player's current inventory to Green Concrete named "%loop-value%"
+				else:
+					set slot {signals.%player%.temp2} of player's current inventory to Red Concrete named "%loop-value%"
+			add 1 to {signals.%player%.loop}
+		set {test.%player%.loop} to 45
+		loop 9 times:
+			set slot {test.%player%.loop} of player's current inventory to Black Glass Pane named "&8&l[&2&lIBHTech&8&l]"
+			add 1 to {test.%player%.loop}
+		if {signals.%player%.page} is not 1:
+			set slot 46 of player's current inventory to Lime glass pane named "Go to Previous Page"
+		set slot 52 of player's current inventory to Lime glass pane named "Go to Next Page"
+		set slot 49 of player's current inventory to Red glass pane named "Page: %{test.%player%.pagenumber}%"
+		set slot 53 of player's current inventory to Compass named "Search for item/block."
+
+on inventory click:
+	if name of event-inventory is "Effected by:":
+		cancel event
+		set {signals.%player%.temp} to index of event-slot
+		if {signals.%player%.temp} is less than 45:
+			if {signals::affected::%{signals.%player%.menu}%::*} contains name of event-item:
+				set slot {signals.%player%.temp} of player's current inventory to Red Concrete named name of event-item
+				set {signals.%player%.temp2} to name of event-item
+				set {signals.%player%.loop} to 1
+				loop {signals::affected::%{signals.%player%.menu}%::*}:
+					set {signals.%player%.temp} to "%loop-value%"
+					if {signals.%player%.temp} is {signals.%player%.temp2}:
+						clear {signals::affected::%{signals.%player%.menu}%::%{signals.%player%.loop}%}
+						exit loop
+					add 1 to {signals.%player%.loop}
+			else:
+				set slot {signals.%player%.temp} of player's current inventory to Green Concrete named name of event-item
+				set {signals.%player%.temp2} to name of event-item
+				set {signals.%player%.loop} to 1
+				loop {signals::affected::%{signals.%player%.menu}%::*}:
+					set {signals.%player%.temp} to "%loop-value%"
+					if {signals.%player%.temp} is {signals.%player%.temp2}:
+						exit loop
+					add 1 to {signals.%player%.loop}
+				add name of event-item to {signals::affected::%{signals.%player%.menu}%::*}
+
+command /signal [<text>] [<text>]:
+	trigger:
+		if arg-1 is "reset":
+			clear {signals::affected::%arg-2%::*}
+
+#every 1 tick:
+#	loop all players in radius 11 of location at {signals::AWS::location::%line 2 of event-block%}:
+#		send "%loop-player%"
+#		set {trainsim.%loop-player%.aws} to true
+command /awssig [<text>] [<text>]:
+	trigger:
+		if arg-1 is "switch":
+			if {signals.AWS.%arg-1%} is true:
+				set {signals.AWS.%arg-1%} to false
+			else:
+				set {signals.AWS.%arg-1%} to true
+		else:
+			send "%{signals.AWS.%arg-1%}%"
+
+command /test:
+	trigger:
+		set {signals.AWS.0} to false
+
+on right click on sign:
+	if line 1 of event-block is "[Signal]":
+		if line 4 of event-block is "AWS":
+			if {signals.AWS.%line 2 of event-block%} is false:
+				set {signals.AWS.%line 2 of event-block%} to true
+			else:
+				set {signals.AWS.%line 2 of event-block%} to false
+		if line 4 of event-block is "stop":
+			if {signals.stop.%line 2 of event-block%} is false:
+				set {signals.stop.%line 2 of event-block%} to true
+			else:
+				set {signals.stop.%line 2 of event-block%} to false
+		else:
+			if {signals.%line 2 of event-block%} is false:
+				set {signals.%line 2 of event-block%} to true
+			else:
+				set {signals.%line 2 of event-block%} to false
+
+on load:
+	while {signals.loop} is true:
+		loop all players:
+			remove 1 from {signal.%loop-player%.aws.countdown}
+		wait 1 tick
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::*}:
+			loop {signals::affected::%loop-value%::*}:
+				if {signals.%loop-value-2%} is true:
+					set {signals.AWS.%loop-value-1%} to false
+				else:
+					set {signals.AWS.%loop-value-1%} to true
+		wait 1 tick
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::AWS::*}:
+			if {signals.AWS.%loop-value%} is true:
+				set line 3 of block at {signals::AWS::location::%loop-value%} to "&aGreen"
+			else:
+				set line 3 of block at {signals::AWS::location::%loop-value%} to "&cRed"
+		wait 1 tick
+
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::AWS::*}:
+			if block 1 down location at {signals::AWS::location::%loop-value%} is lit Redstone lamp:
+				#set line 3 of block at {signals::AWS::location::%loop-value%} to "&aGreen"
+				if {signals.AWS.%loop-value%} is true:
+					loop all players in radius 11 of location at {signals::AWS::location::%loop-value%}:
+						if {signal.%loop-player%.aws.countdown} is less than 0:
+							if {trainsim.%loop-player%.speed} is more than 0.001:
+								set {trainsim.%loop-player%.aws} to true
+								set {signal.%loop-player%.aws.countdown} to 15
+		#else:
+			#set line 3 of block at {signals::AWS::location::%loop-value%} to "&cRed"
+		wait 1 tick
+
+
+on load:
+	while {signals.loop} is true:
+		loop {signals::stop::*}:
+			if {signals.%loop-value%} is false:
+				set {signals.stop.%loop-value%} to false
+			else:
+				set {signals.stop.%loop-value%} to true
+		wait 1 tick
+
+
+
+
+
+
+
+
+
+
+			
